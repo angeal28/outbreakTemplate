@@ -1,3 +1,3 @@
 # Outbreak Template
 
-Developed with Unreal Engine 5
+Developed with Unreal Engine 5.3.2
