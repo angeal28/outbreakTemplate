@@ -6,6 +6,7 @@
 #include "Characters/OutbreakCharacterBase.h"
 #include "OutbreakCharacter.generated.h"
 
+class UOutbreakInventoryComponent;
 /**
  * 
  */
@@ -16,7 +17,7 @@ class OUTBREAK_API AOutbreakCharacter : public AOutbreakCharacterBase
 
 public:
 	AOutbreakCharacter();
-
+	
 	//This function will be called when a Pawn (or Character) is possessed by a controller (e.g., a player or AI controller).
 	//virtual -> This function can be overridden in child classes.
 	virtual void PossessedBy(AController* NewController) override;
@@ -26,5 +27,9 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 	void InitCharacterHUD();
+
+protected:
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	// TObjectPtr<UOutbreakInventoryComponent> InventoryComponent;
 	
 };

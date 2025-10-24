@@ -3,3 +3,7 @@
 
 #include "UI/Inventory/OutbreakInventoryMenuWidget.h"
 
+void UOutbreakInventoryMenuWidget::InitPlayerController(AOutbreakPlayerController* value)
+{
+	MyPlayerController = value;
+}

@@ -6,6 +6,7 @@
 //For Input Mapping
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/OutbreakInventoryComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/PickUps/OutbreakPickUpBase.h"
@@ -181,7 +182,7 @@ void AOutbreakPlayerController::Server_TryPickup_Implementation(AActor* ActorToP
 {
 	if (ActorToPickup->GetClass()->ImplementsInterface(UOutbreakPickUpInterface::StaticClass()))
 	{
-		IOutbreakPickUpInterface::Execute_PickUp(ActorToPickup);
+		IOutbreakPickUpInterface::Execute_PickUp(ActorToPickup, GetCharacter());
 	}
 }
 
@@ -191,26 +192,30 @@ void AOutbreakPlayerController::Inventory(const FInputActionValue& InputActionVa
 	{
 		FInputModeGameAndUI InputModeData;
 		ACharacter* OutbreakCharacter = GetCharacter();
-		if (IsInventoryOpen)
+		UOutbreakInventoryComponent* InventoryComponent = OutbreakCharacter->FindComponentByClass<UOutbreakInventoryComponent>();
+		if (InventoryComponent != nullptr)
 		{
-			OutbreakHUD->ToggleInventoryMenu(IsInventoryOpen);
-			OutbreakCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-			IsInventoryOpen = false;
-			SetShowMouseCursor(false);
-			ResetIgnoreLookInput();
-			SetInputMode(FInputModeGameOnly());
-		}
-		else
-		{
-			//CenterMouseCursor(); This will set the mouse cursor to the middle of the screen
-			OutbreakHUD->ToggleInventoryMenu(IsInventoryOpen);
-			OutbreakCharacter->GetCharacterMovement()->SetMovementMode(MOVE_None);
-			IsInventoryOpen = true;
-			SetIgnoreLookInput(true);
-			SetShowMouseCursor(true);
-			InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			InputModeData.SetHideCursorDuringCapture(true);
-			SetInputMode(InputModeData);
+			if (IsInventoryOpen)
+			{
+				OutbreakHUD->ToggleInventoryMenu(IsInventoryOpen);
+				OutbreakCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+				IsInventoryOpen = false;
+				SetShowMouseCursor(false);
+				ResetIgnoreLookInput();
+				SetInputMode(FInputModeGameOnly());
+			}
+			else
+			{
+				//CenterMouseCursor(); This will set the mouse cursor to the middle of the screen
+				OutbreakHUD->ToggleInventoryMenu(IsInventoryOpen);
+				OutbreakCharacter->GetCharacterMovement()->SetMovementMode(MOVE_None);
+				IsInventoryOpen = true;
+				SetIgnoreLookInput(true);
+				SetShowMouseCursor(true);
+				InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+				InputModeData.SetHideCursorDuringCapture(true);
+				SetInputMode(InputModeData);
+			}
 		}
 	}
 }

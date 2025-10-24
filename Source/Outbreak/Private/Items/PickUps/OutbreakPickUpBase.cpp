@@ -3,6 +3,8 @@
 
 #include "Items/PickUps/OutbreakPickUpBase.h"
 
+#include "Components/OutbreakInventoryComponent.h"
+#include "GameFramework/Character.h"
 #include "Items/OutbreakItemBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
@@ -25,13 +27,17 @@ void AOutbreakPickUpBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AOutbreakPickUpBase::PickUp_Implementation_Implementation()
+void AOutbreakPickUpBase::PickUp_Implementation_Implementation(ACharacter* MyChar)
 {
 	if (HasAuthority())
 	{
-		//Need inventory logic here
-		PlayPickUpSound();
-		Destroy();
+		UOutbreakInventoryComponent* InventoryComponent = MyChar->FindComponentByClass<UOutbreakInventoryComponent>();
+		if (InventoryComponent != nullptr)
+		{
+			//Need inventory logic here
+			PlayPickUpSound();
+			Destroy();
+		}
 	}
 }
 

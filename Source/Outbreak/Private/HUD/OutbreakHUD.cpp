@@ -27,12 +27,13 @@ void AOutbreakHUD::InitMainWidget(APlayerState* PS)
 	Widget->AddToViewport();
 }
 
-void AOutbreakHUD::InitInventoryMenuWidget()
+void AOutbreakHUD::InitInventoryMenuWidget(AOutbreakPlayerController* value)
 {
 	checkf(InventoryMenuClass, TEXT("Inventory Menu Widget Class uninitialized, please fill the BP_OutbreakHUD"));
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), InventoryMenuClass);
 	InventoryMenuWidget = Cast<UOutbreakInventoryMenuWidget>(Widget);
-	InventoryMenuWidget->SetVisibility(ESlateVisibility::Collapsed); //Means hide take no space on the layout 
+	InventoryMenuWidget->InitPlayerController(value);
+	InventoryMenuWidget->SetVisibility(ESlateVisibility::Collapsed); //Means hide take no space on the layout
 	Widget->AddToViewport();
 }
 

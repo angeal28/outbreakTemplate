@@ -23,6 +23,10 @@ public:
 	AOutbreakPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
 
+	// --- Gameplay Data ---
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Inventory Data")
+	int32 InventorySlot = 4;
+	
 	bool IsInventoryOpen = false;
 
 	void SetOutbreakHUD(AOutbreakHUD* value);

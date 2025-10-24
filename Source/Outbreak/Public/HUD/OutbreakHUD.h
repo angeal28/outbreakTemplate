@@ -32,7 +32,7 @@ public:
 
 	void InitMainWidget(APlayerState* PS);
 	
-	void InitInventoryMenuWidget();
+	void InitInventoryMenuWidget(AOutbreakPlayerController* value);
 
 	void InitPlayerState(AOutbreakPlayerState* value);
 

@@ -13,5 +13,9 @@ UCLASS()
 class OUTBREAK_API UOutbreakInventorySlotWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	// Example variable you want to set at creation time
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	int32 SlotIndex;
 };

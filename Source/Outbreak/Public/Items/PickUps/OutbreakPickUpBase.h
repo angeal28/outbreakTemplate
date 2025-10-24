@@ -23,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(Server, Reliable)
-	virtual void PickUp_Implementation() override;
+	virtual void PickUp_Implementation(ACharacter* MyChar) override;
 
 	//UFUNCTION(BlueprintNativeEvent) // 👈 must be BlueprintNativeEvent to override the function from the blueprint
 	//void CallbackEvent();

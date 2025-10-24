@@ -2,6 +2,8 @@
 
 
 #include "Characters/OutbreakCharacter.h"
+
+#include "Components/OutbreakInventoryComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/OutbreakHUD.h"
 #include "Player/OutbreakPlayerController.h"
@@ -39,6 +41,9 @@ AOutbreakCharacter::AOutbreakCharacter()
 		CharacterMovementComponent->BrakingFriction = 0.0f;
 	}
 
+	//Add custom component
+	// InventoryComponent = CreateDefaultSubobject<UOutbreakInventoryComponent>(TEXT("InventoryComponent"));
+	
 	//Add tag
 	Tags.Add(FName("Player"));
 }
@@ -67,7 +72,7 @@ void AOutbreakCharacter::InitCharacterHUD()
 		if (AOutbreakHUD* OutbreakHUD = Cast<AOutbreakHUD>(OutbreakPlayerController->GetHUD())	)
 		{
 			OutbreakHUD->InitMainWidget(OutbreakPlayerState);
-			OutbreakHUD->InitInventoryMenuWidget();
+			OutbreakHUD->InitInventoryMenuWidget(OutbreakPlayerController);
 			OutbreakHUD->InitPlayerState(OutbreakPlayerState);
 			OutbreakPlayerController->SetOutbreakHUD(OutbreakHUD);
 		}
