@@ -3,6 +3,7 @@
 
 #include "Items/PickUps/OutbreakPickUpBase.h"
 
+#include "Items/OutbreakItemBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 
@@ -44,9 +45,14 @@ void AOutbreakPickUpBase::DisabledPromp()
 
 void AOutbreakPickUpBase::PlayPickUpSound_Implementation()
 {
-	if (PickUpSound != nullptr)
+	if (ItemBase != nullptr)
 	{
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickUpSound, GetActorLocation());
+		//This will get the default object of the actor
+		AOutbreakItemBase* DefaultItem = ItemBase.GetDefaultObject();
+		if (DefaultItem->ItemData.PickupSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), DefaultItem->ItemData.PickupSound, GetActorLocation());
+		}
 	}
 }
 

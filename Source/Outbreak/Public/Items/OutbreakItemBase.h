@@ -3,88 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SAdvancedTransformInputBox.h"
 #include "GameFramework/Actor.h"
-#include "PickUps/OutbreakPickUpBase.h"
+#include "Struct/Items/OutbreakStructItemData.h"
 #include "OutbreakItemBase.generated.h"
 
-UENUM()
-enum class EItemType
-{
-	Item,
-	Weapon,
-	Consumable,
-	Documents
-};
-
-UENUM()
-enum class EItemTag
-{
-	KeyItem,
-	Health,
-	Equipment,
-	Ammunition
-};
-
-USTRUCT(BlueprintType, Blueprintable) 
-struct FItemData
-{
-	GENERATED_BODY()
-
-	FItemData() : Icon(nullptr), Type(EItemType::Item), Tag(EItemTag::KeyItem), Value(0), MaxAmount(0), CanBeUsed(false), CanBeExamine(false),
-	              CanBeDrop(false),
-	              CanBeEquipped(false),
-	              ExaminationMesh(nullptr),
-	              ExaminationMeshOffset(0),
-	              ExaminationDefaultMeshRotation(FRotator::ZeroRotator)
-	{
-	}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FName Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FName Description;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	UTexture2D* Icon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	EItemType Type;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	EItemTag Tag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float Value;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int MaxAmount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSubclassOf<AOutbreakPickUpBase> PickUpActor; // 👈 This is how you choose a class
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool CanBeUsed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool CanBeExamine;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool CanBeDrop;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool CanBeEquipped;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	UStaticMeshComponent* ExaminationMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float ExaminationMeshOffset;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FRotator ExaminationDefaultMeshRotation;
-};
+class AOutbreakCharacter;
 
 UCLASS(Abstract)
 class OUTBREAK_API AOutbreakItemBase : public AActor
@@ -95,7 +18,23 @@ public:
 	// Sets default values for this actor's properties
 	AOutbreakItemBase();
 
+	// Reference to static data from DataTable or asset
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item Data")
+	FOutbreakStructItemData ItemData;
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FItemData ItemData;
+
+	// === Actions ===
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void Use(AOutbreakCharacter* Player);
+	virtual void Use_Implementation(AOutbreakCharacter* Player);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void Examine(AOutbreakCharacter* Player);
+	virtual void Examine_Implementation(AOutbreakCharacter* Player);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void Drop(AOutbreakCharacter* Player);
+	virtual void Drop_Implementation(AOutbreakCharacter* Player);
+	
 };

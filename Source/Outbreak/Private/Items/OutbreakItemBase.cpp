@@ -11,3 +11,15 @@ AOutbreakItemBase::AOutbreakItemBase()
 
 }
 
+void AOutbreakItemBase::Drop_Implementation(AOutbreakCharacter* Player)
+{
+}
+
+void AOutbreakItemBase::Examine_Implementation(AOutbreakCharacter* Player)
+{
+}
+
+void AOutbreakItemBase::Use_Implementation(AOutbreakCharacter* Player)
+{
+}
+

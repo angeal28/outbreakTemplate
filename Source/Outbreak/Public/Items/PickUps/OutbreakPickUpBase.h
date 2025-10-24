@@ -46,6 +46,10 @@ public:
 	virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
+	// Unique ID for item (used in GameInstance persistence)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item")
+	FName ItemID;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<AOutbreakItemBase> ItemBase;
 
@@ -54,9 +58,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Amount = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
-	TObjectPtr<USoundCue> PickUpSound;
 
 	//This is how to call a construction
 	virtual void OnConstruction(const FTransform& Transform) override;
