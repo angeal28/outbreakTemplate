@@ -7,6 +7,8 @@
 #include "OutbreakInventoryComponent.generated.h"
 
 
+class UOutbreakInventorySlotWidget;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class OUTBREAK_API UOutbreakInventoryComponent : public UActorComponent
 {
@@ -20,7 +22,11 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	TArray<TSubclassOf<UOutbreakInventorySlotWidget>> InventorySlots;
 
+	UFUNCTION(BlueprintCallable)
+	void Initialize(int32 InventorySlot);
 		
 };

@@ -22,3 +22,8 @@ void UOutbreakInventoryComponent::BeginPlay()
 	// ...
 	
 }
+
+void UOutbreakInventoryComponent::Initialize(int32 InventorySlot)
+{
+	InventorySlots.SetNum(InventorySlot);
+}

@@ -15,6 +15,18 @@ void AOutbreakItemBase::Drop_Implementation(AOutbreakCharacter* Player)
 {
 }
 
+void AOutbreakItemBase::Consume_Implementation(AOutbreakCharacter* Player)
+{
+}
+
+void AOutbreakItemBase::Equip_Implementation(AOutbreakCharacter* Player)
+{
+}
+
+void AOutbreakItemBase::UnEquip_Implementation(AOutbreakCharacter* Player)
+{
+}
+
 void AOutbreakItemBase::Examine_Implementation(AOutbreakCharacter* Player)
 {
 }

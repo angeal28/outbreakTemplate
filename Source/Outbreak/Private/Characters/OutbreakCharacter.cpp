@@ -43,6 +43,7 @@ AOutbreakCharacter::AOutbreakCharacter()
 
 	//Add custom component
 	// InventoryComponent = CreateDefaultSubobject<UOutbreakInventoryComponent>(TEXT("InventoryComponent"));
+	AttributeComponent = CreateDefaultSubobject<UOutbreakAttributesComponent>(TEXT("AttributeComponent"));
 	
 	//Add tag
 	Tags.Add(FName("Player"));

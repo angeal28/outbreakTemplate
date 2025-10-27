@@ -36,5 +36,17 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
 	void Drop(AOutbreakCharacter* Player);
 	virtual void Drop_Implementation(AOutbreakCharacter* Player);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void Consume(AOutbreakCharacter* Player);
+	virtual void Consume_Implementation(AOutbreakCharacter* Player);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void Equip(AOutbreakCharacter* Player);
+	virtual void Equip_Implementation(AOutbreakCharacter* Player);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item Actions")
+	void UnEquip(AOutbreakCharacter* Player);
+	virtual void UnEquip_Implementation(AOutbreakCharacter* Player);
 	
 };

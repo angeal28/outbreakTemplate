@@ -6,6 +6,7 @@
 #include "Characters/OutbreakCharacterBase.h"
 #include "OutbreakCharacter.generated.h"
 
+class UOutbreakAttributesComponent;
 class UOutbreakInventoryComponent;
 /**
  * 
@@ -32,4 +33,6 @@ protected:
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	// TObjectPtr<UOutbreakInventoryComponent> InventoryComponent;
 	
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    TObjectPtr<UOutbreakAttributesComponent> AttributeComponent;
 };
