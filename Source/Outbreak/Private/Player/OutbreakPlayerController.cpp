@@ -80,6 +80,11 @@ void AOutbreakPlayerController::SetOutbreakHUD(AOutbreakHUD* value)
 	OutbreakHUD = value;
 }
 
+AOutbreakHUD* AOutbreakPlayerController::GetOutbreakHUD()
+{
+	return OutbreakHUD;
+}
+
 void AOutbreakPlayerController::CenterMouseCursor()
 {
 	FVector2D ViewportSize;

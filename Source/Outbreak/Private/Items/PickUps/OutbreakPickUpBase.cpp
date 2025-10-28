@@ -35,6 +35,7 @@ void AOutbreakPickUpBase::PickUp_Implementation_Implementation(ACharacter* MyCha
 		if (InventoryComponent != nullptr)
 		{
 			//Need inventory logic here
+			InventoryComponent->ValidateInventoryItem(ItemBase, Amount);
 			PlayPickUpSound();
 			Destroy();
 		}

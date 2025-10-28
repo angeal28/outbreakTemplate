@@ -7,7 +7,33 @@
 #include "OutbreakInventoryComponent.generated.h"
 
 
-class UOutbreakInventorySlotWidget;
+class AOutbreakHUD;
+struct FOutbreakStructInventoryItems;
+class AOutbreakItemBase;
+
+USTRUCT(BlueprintType)
+struct FItemSlot
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	bool Success = false;
+
+	UPROPERTY()
+	int32 SlotIndex;
+};
+
+USTRUCT(BlueprintType)
+struct FItemBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	AOutbreakItemBase* Item;
+
+	UPROPERTY()
+	int32 Amount;
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class OUTBREAK_API UOutbreakInventoryComponent : public UActorComponent
@@ -22,11 +48,29 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	AOutbreakHUD* OutbreakHUD;
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	TArray<TSubclassOf<UOutbreakInventorySlotWidget>> InventorySlots;
+	TArray<FOutbreakStructInventoryItems> InventorySlots;
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize(int32 InventorySlot);
-		
+	void Initialize(int32 InventorySlot, AOutbreakHUD* Hud);
+
+	UFUNCTION(BlueprintCallable)
+	void ValidateInventoryItem(TSubclassOf<AOutbreakItemBase> ItemBase, int32 Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void AddItem(TSubclassOf<AOutbreakItemBase> ItemBase, int32 Amount);
+
+	//This will create a function that has two variable that can be return in the blueprint
+	//UFUNCTION(BlueprintCallable)
+	//void CheckFreeInventorySlots(bool& OutSuccess, int32& OutInventoryIndex);
+
+	UFUNCTION(BlueprintCallable)
+	FItemSlot CheckFreeInventorySlots();
+
+	// UFUNCTION(BlueprintCallable)
+	FItemBase GetItemByIndex(int32 SlotIndex);
 };

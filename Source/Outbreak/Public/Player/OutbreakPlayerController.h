@@ -31,6 +31,8 @@ public:
 
 	void SetOutbreakHUD(AOutbreakHUD* value);
 
+	AOutbreakHUD* GetOutbreakHUD();
+
 	void CenterMouseCursor();
 
 	void UpdateCharacterRun(bool Running);
@@ -41,7 +43,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<AOutbreakHUD> OutbreakHUD;
 	
 private:

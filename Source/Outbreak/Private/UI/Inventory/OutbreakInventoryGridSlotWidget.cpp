@@ -1,4 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "UI/Inventory/OutbreakInventoryGridSlotWidget.h"
+
+void UOutbreakInventoryGridSlotWidget::CreateInventorySlots_Implementation(
+	AOutbreakPlayerController* MyPlayerController)
+{
+}

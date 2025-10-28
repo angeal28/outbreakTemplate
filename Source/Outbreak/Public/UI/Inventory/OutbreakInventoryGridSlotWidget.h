@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "OutbreakInventoryGridSlotWidget.generated.h"
 
+class AOutbreakPlayerController;
 class UOutbreakInventorySlotWidget;
 /**
  * 
@@ -16,6 +17,9 @@ class OUTBREAK_API UOutbreakInventoryGridSlotWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CreateInventorySlots(AOutbreakPlayerController* MyPlayerController);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
 	TSubclassOf<UOutbreakInventorySlotWidget> InventorySlotWidget;
 
