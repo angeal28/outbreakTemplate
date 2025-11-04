@@ -10,12 +10,17 @@ UOutbreakInventorySlotWidget::UOutbreakInventorySlotWidget(const FObjectInitiali
 {
 }
 
+//NOTE NEED TO ADJUST THE CODE JUST GET OWNER
 void UOutbreakInventorySlotWidget::UpdateSlot(AOutbreakCharacter* MyChar)
 {
+	// GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, MyChar->GetName());
 	UOutbreakInventoryComponent* InventoryComponent = MyChar->FindComponentByClass<UOutbreakInventoryComponent>();
 	FItemBase ItemBase = InventoryComponent->GetItemByIndex(SlotIndex);
-	UE_LOG(LogTemp, Warning, TEXT("Item is %s"), *ItemBase.Item->ItemData.ItemName.ToString());
-	ItemIcon->SetBrushFromTexture(ItemBase.Item->ItemData.Icon);
+	if (ItemBase.Item != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item is %s"), *ItemBase.Item->ItemData.ItemName.ToString());
+		ItemIcon->SetBrushFromTexture(ItemBase.Item->ItemData.Icon);
+	}
 }
 
 void UOutbreakInventorySlotWidget::NativeConstruct()

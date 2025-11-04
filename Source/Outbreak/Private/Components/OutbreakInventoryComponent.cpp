@@ -6,6 +6,7 @@
 #include "Characters/OutbreakCharacter.h"
 #include "HUD/OutbreakHUD.h"
 #include "Items/OutbreakItemBase.h"
+#include "Net/UnrealNetwork.h"
 #include "Player/OutbreakPlayerController.h"
 #include "UI/Inventory/OutbreakInventoryGridSlotWidget.h"
 #include "UI/Inventory/OutbreakInventorySlotWidget.h"
@@ -17,6 +18,8 @@ UOutbreakInventoryComponent::UOutbreakInventoryComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
+	// ✅ This makes it replicate when the owner replicates
+	SetIsReplicatedByDefault(true);
 	// ...
 }
 
@@ -25,26 +28,45 @@ UOutbreakInventoryComponent::UOutbreakInventoryComponent()
 void UOutbreakInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	AOutbreakCharacter* Char = Cast<AOutbreakCharacter>(GetOwner());
-	if (Char)
-	{
-		AController* CharController = Char->GetController();
-		if (CharController)
-		{
-			AOutbreakPlayerController* PlayerController = Cast<AOutbreakPlayerController>(CharController);\
-			if (PlayerController)
-			{
-				OutbreakHUD = PlayerController->GetOutbreakHUD();
-			}
-		}
-	}
+	// // Get the owning character
+	// AOutbreakCharacter* Character = Cast<AOutbreakCharacter>(GetOwner());
+	// if (Character)
+	// {
+	// 	OutbreakCharacter = Character;
+	// 	// Get controller
+	// 	AOutbreakPlayerController* PlayerController = Cast<AOutbreakPlayerController>(Character->GetController());
+	// 	if (PlayerController)
+	// 	{
+	// 		OutbreakHUD = PlayerController->GetOutbreakHUD();
+	// 	}
+	// }
 }
 
-void UOutbreakInventoryComponent::Initialize(int32 InventorySlot, AOutbreakHUD* Hud)
+void UOutbreakInventoryComponent::InitializeInventorySlots(int32 InventorySlot)
+{
+	Server_TryInitializeInventorySlots(InventorySlot);
+}
+
+void UOutbreakInventoryComponent::Server_TryInitializeInventorySlots_Implementation(int32 InventorySlot)
 {
 	//This will resize the array
 	InventorySlots.SetNum(InventorySlot);
+}
+
+void UOutbreakInventoryComponent::InitializeOutbreakHUD(AOutbreakHUD* Hud)
+{
 	OutbreakHUD = Hud;
+}
+
+void UOutbreakInventoryComponent::InitializeOutbreakCharacter(AOutbreakCharacter* Character)
+{
+	OutbreakCharacter = Character;
+}
+
+void UOutbreakInventoryComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UOutbreakInventoryComponent, InventorySlots);
 }
 
 void UOutbreakInventoryComponent::ValidateInventoryItem(TSubclassOf<AOutbreakItemBase> ItemBase, int32 Amount)
@@ -60,14 +82,17 @@ void UOutbreakInventoryComponent::AddItem(TSubclassOf<AOutbreakItemBase> ItemBas
 		FOutbreakStructInventoryItems& InventorySlot = InventorySlots[Slot.SlotIndex];
 		InventorySlot.ItemBase = ItemBase;
 		InventorySlot.Amount = Amount;
-		if (OutbreakHUD != nullptr)
+		if (GetOwner()->HasAuthority())
 		{
-			// const FString Msg = FString::Printf(TEXT("HELLO"));
-			// GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, Msg);
-			UOutbreakInventorySlotWidget* SlotWidget = OutbreakHUD->InventoryMenuWidget->OutbreakInventoryGridSlotWidget->SlotWidgetArray[Slot.SlotIndex];
-			if (SlotWidget != nullptr)
+			if (OutbreakHUD != nullptr)
 			{
-				SlotWidget->UpdateSlot(Cast<AOutbreakCharacter>(GetOwner()));
+				const FString Msg = FString::Printf(TEXT("HELLO"));
+				GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, Msg);
+				UOutbreakInventorySlotWidget* SlotWidget = OutbreakHUD->InventoryMenuWidget->OutbreakInventoryGridSlotWidget->SlotWidgetArray[Slot.SlotIndex];
+				if (SlotWidget != nullptr)
+				{
+					SlotWidget->UpdateSlot(OutbreakCharacter);
+				}
 			}
 		}
 	}
@@ -114,8 +139,38 @@ FItemBase UOutbreakInventoryComponent::GetItemByIndex(int32 SlotIndex)
 	FOutbreakStructInventoryItems& InvSlot = InventorySlots[SlotIndex];
 	//First get the class of the inventory slot
 	UClass* ItemClass = InvSlot.ItemBase.Get();
-	//Then get the default object assign to it
-	ItemBase.Item = ItemClass->GetDefaultObject<AOutbreakItemBase>();
-	ItemBase.Amount = InvSlot.Amount;
+	if (ItemClass != nullptr)
+	{
+		//Then get the default object assign to it
+		ItemBase.Item = ItemClass->GetDefaultObject<AOutbreakItemBase>();
+		ItemBase.Amount = InvSlot.Amount;
+		return ItemBase;
+	}
 	return ItemBase;
 }
+
+void UOutbreakInventoryComponent::OnRep_InventorySlots()
+{
+	if (InventorySlots.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventorySlots is empty on client."));
+		return;
+	}
+
+	if (!OutbreakHUD || !OutbreakHUD->InventoryMenuWidget || !OutbreakHUD->InventoryMenuWidget->OutbreakInventoryGridSlotWidget)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HUD or widgets not ready yet."));
+		return;
+	}
+
+	//Update UI
+	for (int32 i = 0; i < InventorySlots.Num(); i++)
+	{
+		UOutbreakInventorySlotWidget* SlotWidget = OutbreakHUD->InventoryMenuWidget->OutbreakInventoryGridSlotWidget->SlotWidgetArray[i];
+		if (SlotWidget && OutbreakCharacter)
+		{
+			SlotWidget->UpdateSlot(OutbreakCharacter);
+		}
+	}
+}
+

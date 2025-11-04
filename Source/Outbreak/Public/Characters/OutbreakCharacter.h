@@ -30,8 +30,8 @@ public:
 	void InitCharacterHUD();
 
 protected:
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
-	// TObjectPtr<UOutbreakInventoryComponent> InventoryComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UOutbreakInventoryComponent> InventoryComponent;
 	
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     TObjectPtr<UOutbreakAttributesComponent> AttributeComponent;

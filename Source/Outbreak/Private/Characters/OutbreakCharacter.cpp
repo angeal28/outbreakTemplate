@@ -10,6 +10,8 @@
 
 AOutbreakCharacter::AOutbreakCharacter()
 {
+	bReplicates = true;
+	
 	//Rotate toward movement | Auto-face movement direction
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	//How fast it turns | Smooth or snappy turning
@@ -42,8 +44,10 @@ AOutbreakCharacter::AOutbreakCharacter()
 	}
 
 	//Add custom component
-	// InventoryComponent = CreateDefaultSubobject<UOutbreakInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent = CreateDefaultSubobject<UOutbreakInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent->RegisterComponent();
 	AttributeComponent = CreateDefaultSubobject<UOutbreakAttributesComponent>(TEXT("AttributeComponent"));
+	AttributeComponent->RegisterComponent();
 	
 	//Add tag
 	Tags.Add(FName("Player"));
@@ -70,12 +74,18 @@ void AOutbreakCharacter::InitCharacterHUD()
 	
 	if (AOutbreakPlayerController* OutbreakPlayerController = Cast<AOutbreakPlayerController>(GetController()))
 	{
-		if (AOutbreakHUD* OutbreakHUD = Cast<AOutbreakHUD>(OutbreakPlayerController->GetHUD())	)
+		if (AOutbreakHUD* OutbreakHUD = Cast<AOutbreakHUD>(OutbreakPlayerController->GetHUD()))
 		{
 			OutbreakHUD->InitMainWidget(OutbreakPlayerState);
 			OutbreakHUD->InitInventoryMenuWidget(OutbreakPlayerController);
 			OutbreakHUD->InitPlayerState(OutbreakPlayerState);
 			OutbreakPlayerController->SetOutbreakHUD(OutbreakHUD);
+			if (InventoryComponent != nullptr)
+			{
+				InventoryComponent->InitializeInventorySlots(OutbreakPlayerController->InventorySlot);
+				InventoryComponent->InitializeOutbreakHUD(OutbreakHUD);
+				InventoryComponent->InitializeOutbreakCharacter(this);
+			}
 		}
 	}
 }
