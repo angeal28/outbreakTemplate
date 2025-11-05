@@ -4,6 +4,7 @@
 #include "Components/OutbreakInventoryComponent.h"
 
 #include "Characters/OutbreakCharacter.h"
+#include "Helpers/OutbreakDebug.h"
 #include "HUD/OutbreakHUD.h"
 #include "Items/OutbreakItemBase.h"
 #include "Net/UnrealNetwork.h"
@@ -28,18 +29,6 @@ UOutbreakInventoryComponent::UOutbreakInventoryComponent()
 void UOutbreakInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	// // Get the owning character
-	// AOutbreakCharacter* Character = Cast<AOutbreakCharacter>(GetOwner());
-	// if (Character)
-	// {
-	// 	OutbreakCharacter = Character;
-	// 	// Get controller
-	// 	AOutbreakPlayerController* PlayerController = Cast<AOutbreakPlayerController>(Character->GetController());
-	// 	if (PlayerController)
-	// 	{
-	// 		OutbreakHUD = PlayerController->GetOutbreakHUD();
-	// 	}
-	// }
 }
 
 void UOutbreakInventoryComponent::InitializeInventorySlots(int32 InventorySlot)
@@ -86,8 +75,6 @@ void UOutbreakInventoryComponent::AddItem(TSubclassOf<AOutbreakItemBase> ItemBas
 		{
 			if (OutbreakHUD != nullptr)
 			{
-				const FString Msg = FString::Printf(TEXT("HELLO"));
-				GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, Msg);
 				UOutbreakInventorySlotWidget* SlotWidget = OutbreakHUD->InventoryMenuWidget->OutbreakInventoryGridSlotWidget->SlotWidgetArray[Slot.SlotIndex];
 				if (SlotWidget != nullptr)
 				{
@@ -97,22 +84,18 @@ void UOutbreakInventoryComponent::AddItem(TSubclassOf<AOutbreakItemBase> ItemBas
 		}
 	}
 	//This will print it like a print string on the blueprint
-	if (GEngine)
+	int32 SlotIndex = 0;
+	for (FOutbreakStructInventoryItems& InvSlot : InventorySlots)
 	{
-		int32 SlotIndex = 0;
-		for (FOutbreakStructInventoryItems& InvSlot : InventorySlots)
+		if (InvSlot.ItemBase != nullptr)
 		{
-			if (InvSlot.ItemBase != nullptr)
-			{
-				//First get the class of the inventory slot
-				UClass* ItemClass = InvSlot.ItemBase.Get();
-				//Then get the default object assign to it
-				AOutbreakItemBase* DefaultItem = ItemClass->GetDefaultObject<AOutbreakItemBase>();
-				const FString Msg = FString::Printf(TEXT("picked up %s put it on slot %d"), *DefaultItem->ItemData.ItemName.ToString(), SlotIndex);
-				GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, Msg);
-			}
-			SlotIndex++;
+			//First get the class of the inventory slot
+			UClass* ItemClass = InvSlot.ItemBase.Get();
+			//Then get the default object assign to it
+			AOutbreakItemBase* DefaultItem = ItemClass->GetDefaultObject<AOutbreakItemBase>();
+			FOutbreakDebug::Get().Print(FString::Printf(TEXT("picked up %s put it on slot %d"), *DefaultItem->ItemData.ItemName.ToString(), SlotIndex));
 		}
+		SlotIndex++;
 	}
 }
 
